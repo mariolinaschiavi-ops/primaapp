@@ -1,514 +1,171 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI & Didattica — Guida per Docenti in Formazione</title>
-  <meta name="description" content="Web app monofile per orientare i docenti all'uso dell'intelligenza artificiale nella didattica: funzionamento, rischi, costi e applicazioni." />
-  <style>
-    :root{
-      --bg: #0f1020;
-      --text: #0b0b12;
-      --muted: #5b5e77;
-      --card: #ffffff;
-      --accentA: #6a5cff; /* indigo */
-      --accentB: #ff6a95; /* pink */
-      --accentC: #00d1ff; /* cyan */
-      --ring: rgba(255,255,255,.35);
-      --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.15);
-      --grad: linear-gradient(135deg, var(--accentA), var(--accentB) 50%, var(--accentC));
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color: var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(106,92,255,.35), transparent 60%),
-        radial-gradient(900px 500px at 95% 10%, rgba(0,209,255,.25), transparent 60%),
-        radial-gradient(1000px 600px at 20% 110%, rgba(255,106,149,.25), transparent 60%),
-        #f6f7fb;
-      line-height:1.5;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Guida - Equazioni di Primo Grado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f7ff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
 
-    /* Layout */
-    .app{
-      display:grid;
-      grid-template-columns: 280px 1fr;
-      gap: 24px;
-      min-height:100dvh;
-    }
-    @media (max-width: 980px){
-      .app{grid-template-columns: 1fr}
-    }
+        header {
+            background-color: #2e6cff;
+            color: white;
+            padding: 15px;
+            font-size: 1.5em;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
 
-    /* Header/Hero */
-    header.hero{
-      position: relative;
-      grid-column: 1 / -1;
-      isolation:isolate;
-      padding: clamp(24px, 4vw, 40px);
-      border-bottom: 1px solid rgba(0,0,0,.06);
-      background: radial-gradient(1000px 400px at 10% 0%, rgba(106,92,255,.25), transparent 70%) ,
-                  radial-gradient(900px 450px at 90% 0%, rgba(0,209,255,.20), transparent 70%);
-    }
-    .hero-inner{
-      max-width:1200px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      align-items:center;
-      gap:24px;
-    }
-    @media (max-width: 980px){
-      .hero-inner{grid-template-columns: 1fr}
-    }
-    .badge{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:6px 12px; border-radius:999px;
-      background: rgba(255,255,255,.6); border:1px solid rgba(0,0,0,.06);
-      backdrop-filter: blur(6px);
-      font-size:14px;
-    }
-    .title{
-      margin:10px 0 0; font-size:clamp(28px, 5vw, 48px); line-height:1.1;
-      background: var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
-      font-weight:800; letter-spacing:-.02em;
-    }
-    .subtitle{color:#2d2f45; max-width:60ch; margin:12px 0 0; font-size:clamp(16px, 2.2vw, 18px)}
-    .hero-card{
-      background: #ffffffdd;
-      backdrop-filter: blur(8px);
-      border:1px solid rgba(0,0,0,.06);
-      border-radius: calc(var(--radius) + 4px);
-      padding:18px;
-      box-shadow: var(--shadow);
-    }
-    .hero-card p{margin:10px 0 0; color:#333}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
-      background: #f2f4ff; color:#2d2f45; font-weight:600; font-size:14px;
-      border: 1px solid #dfe3ff;
-    }
+        section {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
 
-    /* Sidebar Nav */
-    nav.sidebar{
-      position: sticky; top:16px; align-self:start;
-      margin: 0 0 12px 16px;
-      padding:16px;
-      background:#ffffffcc; backdrop-filter: blur(8px);
-      border:1px solid rgba(0,0,0,.06);
-      border-radius: calc(var(--radius) + 6px);
-      box-shadow: var(--shadow);
-    }
-    @media (max-width:980px){
-      nav.sidebar{ position: static; margin: 0 16px }
-    }
-    .menu-title{font-weight:800; font-size:18px; margin:4px 0 12px}
-    .menu{
-      display:grid; gap:10px;
-    }
-    .btn{
-      appearance:none; border:0; cursor:pointer; text-align:left;
-      padding:12px 14px; border-radius:20px;
-      display:flex; align-items:center; gap:12px;
-      background: #f7f7ff;
-      border:1px solid #e8e9ff;
-      transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-      font-weight:700; color:#2b2d42;
-    }
-    .btn:hover{ transform: translateY(-1px); background:#ffffff; box-shadow: 0 6px 16px rgba(106,92,255,.15) }
-    .btn[aria-current="true"]{ background: var(--grad); color:white; border-color: transparent; box-shadow: 0 6px 16px rgba(0,0,0,.15) }
-    .btn svg{flex:0 0 22px}
+        h2 {
+            color: #2e6cff;
+        }
 
-    /* Content */
-    main.content{ padding: 8px 16px 40px 4px }
-    .section{
-      scroll-margin-top: 90px;
-      background:#ffffff;
-      border:1px solid rgba(0,0,0,.06);
-      border-radius: var(--radius);
-      padding:22px;
-      margin: 0 16px 20px 0;
-      box-shadow: var(--shadow);
-      animation: fadeIn .4s ease both;
-    }
-    @keyframes fadeIn{ from{opacity:0; transform: translateY(6px)} to{opacity:1; transform:none} }
-    .section h2{
-      margin:6px 0 10px;
-      font-size: clamp(20px, 2.6vw, 26px);
-      line-height:1.2;
-    }
-    .kicker{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px; background:#f4f7ff; border:1px solid #e6eaff; color:#4a4d74;
-      font-weight:700; font-size:13px; letter-spacing:.02em; text-transform:uppercase;
-    }
-    .grid-2{
-      display:grid; grid-template-columns: 1fr 1fr; gap:16px;
-    }
-    @media (max-width: 900px){ .grid-2{ grid-template-columns:1fr } }
+        button {
+            background-color: #2e6cff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            margin: 8px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    .card{
-      background:#ffffff;
-      border:1px solid rgba(0,0,0,.06);
-      border-radius: calc(var(--radius) - 2px);
-      padding:16px;
-    }
+        button:hover {
+            background-color: #1c4cd3;
+        }
 
-    /* Footer */
-    footer{
-      grid-column:1 / -1;
-      padding:26px 16px 60px;
-      text-align:center; color:#4a4d74;
-    }
+        .exercise {
+            margin-top: 15px;
+            padding: 15px;
+            background: #eef4ff;
+            border-radius: 8px;
+            text-align: left;
+        }
 
-    /* Utilities */
-    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
-    .tag{display:inline-block; padding:6px 10px; border-radius:999px; background:#f6f7ff; border:1px solid #e6eaff; font-weight:600; font-size:13px; color:#373a56}
-    .list{margin:10px 0; padding-left:1.1em}
-    .list li{margin:.35em 0}
+        .feedback {
+            font-weight: bold;
+            margin-top: 8px;
+        }
 
-    /* Top utility bar (mobile menu + search placeholder) */
-    .topbar{
-      display:none;
-      padding:10px 16px;
-      gap:10px;
-    }
-    @media (max-width:980px){
-      .topbar{display:flex}
-    }
-    .topbar .toggle{
-      padding:10px 12px; border-radius:14px; border:1px solid #e8e9ff; background:#fff; font-weight:700
-    }
-
-    /* Skip link */
-    .skip{
-      position:absolute; left:12px; top:-40px; padding:8px 12px; border-radius:10px; background:#111; color:#fff; z-index:1000
-    }
-    .skip:focus{ top:12px }
-  </style>
+        footer {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 0.9em;
+            background: #e9f0ff;
+        }
+    </style>
 </head>
 <body>
-  <a href="#main" class="skip">Salta al contenuto</a>
-
-  <div class="app">
-    <!-- HERO -->
-    <header class="hero" role="banner" aria-label="Intestazione e presentazione">
-      <div class="hero-inner">
-        <div>
-          <span class="badge" aria-label="Percorso per docenti">
-            <!-- book icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 19a2 2 0 0 0 2 2h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M6 21V5a2 2 0 0 1 2-2h11v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M8 5h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Percorso per Docenti
-          </span>
-          <h1 class="title">AI &amp; Didattica<br/>Guida Pratica</h1>
-          <p class="subtitle">
-            Una web app essenziale per conoscere <strong>funzionamento</strong>, <strong>rischi</strong>, <strong>costi</strong> e le <strong>applicazioni</strong> dell'intelligenza artificiale nella scuola primaria, secondaria e nelle attività di matematica.
-          </p>
-        </div>
-        <aside class="hero-card" aria-label="Obiettivi del percorso">
-          <div class="pill">Obiettivi</div>
-          <p>
-            • Comprendere i principi di base dell’AI<br/>
-            • Valutare opportunità e rischi in classe<br/>
-            • Pianificare attività didattiche supportate dall’AI<br/>
-            • Orientarsi tra costi, strumenti e buone pratiche
-          </p>
-        </aside>
-      </div>
+    <header>
+        🎧 Audio Guida - Equazioni di Primo Grado
     </header>
 
-    <!-- TOPBAR (mobile) -->
-    <div class="topbar" aria-label="Barra comandi">
-      <button id="menuToggle" class="toggle" aria-expanded="false" aria-controls="sidenav">Menù</button>
-      <div class="tag">Guida rapida</div>
-    </div>
+    <section id="teoria">
+        <h2>1️⃣ Comprendere le Equazioni di Primo Grado</h2>
+        <p>Un'equazione di primo grado è un'uguaglianza che contiene un'incognita elevata solo alla prima potenza.</p>
+        <button onclick="riproduciAudio('intro')">🔊 Ascolta la spiegazione</button>
+    </section>
 
-    <!-- SIDEBAR NAV -->
-    <nav id="sidenav" class="sidebar" aria-label="Navigazione sezioni">
-      <div class="menu-title">Sezioni</div>
-      <div class="menu">
-        <a class="btn" href="#funzionamento" data-link>
-          <!-- chip icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <rect x="5" y="5" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-            <path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Funzionamento generale dell'AI
-        </a>
-        <a class="btn" href="#rischi" data-link>
-          <!-- alert icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <path d="M10.3 3.6 1.8 19a2 2 0 0 0 1.8 3h16.8a2 2 0 0 0 1.8-3L13.7 3.6a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 9v5M12 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Rischi derivanti dall'utilizzo
-        </a>
-        <a class="btn" href="#costi" data-link>
-          <!-- money icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <rect x="2" y="6" width="20" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
-            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          Costi
-        </a>
-        <a class="btn" href="#primaria" data-link>
-          <!-- school icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <path d="M3 10 12 5l9 5-9 5-9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M5 12v5l7 4 7-4v-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
-          Applicazioni scuola primaria
-        </a>
-        <a class="btn" href="#secondaria" data-link>
-          <!-- grad cap icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <path d="M22 10 12 5 2 10l10 5 10-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M6 12v4c0 1 3 3 6 3s6-2 6-3v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Applicazioni scuola secondaria
-        </a>
-        <a class="btn" href="#matematica" data-link>
-          <!-- math icon -->
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-            <path d="M3 21h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M7 7l4 4M11 7L7 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M17 7v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Applicazioni di Matematica
-        </a>
-      </div>
-    </nav>
+    <section id="proprieta">
+        <h2>2️⃣ Proprietà Fondamentali</h2>
+        <p>Per risolvere un'equazione di primo grado possiamo usare due proprietà principali:</p>
+        <ul style="text-align: left;">
+            <li><b>Proprietà additiva:</b> possiamo addizionare o sottrarre lo stesso numero a entrambi i membri.</li>
+            <li><b>Proprietà moltiplicativa:</b> possiamo moltiplicare o dividere entrambi i membri per lo stesso numero (diverso da zero).</li>
+        </ul>
+        <button onclick="riproduciAudio('proprieta')">🔊 Ascolta le proprietà</button>
+    </section>
 
-    <!-- MAIN CONTENT -->
-    <main id="main" class="content" role="main">
-      <!-- FUNZIONAMENTO -->
-      <section id="funzionamento" class="section" aria-labelledby="h-funz">
-        <span class="kicker">Sezione 1</span>
-        <h2 id="h-funz">Funzionamento generale dell'AI</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Concetti chiave</h3>
-            <ul class="list">
-              <li><strong>Apprendimento supervisionato</strong>: il modello impara da esempi etichettati.</li>
-              <li><strong>Apprendimento non supervisionato</strong>: scoperta di pattern senza etichette.</li>
-              <li><strong>Reti neurali</strong> e <strong>transformer</strong> per testi, immagini e suoni.</li>
-              <li><strong>Fine-tuning</strong> e <strong>prompting</strong> per adattare i modelli al contesto didattico.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Uso in classe</h3>
-            <ul class="list">
-              <li>Generazione di spiegazioni alternative e mappe concettuali.</li>
-              <li>Feedback immediato su esercizi e scritture.</li>
-              <li>Strumenti di accessibilità (riassunti, lettura ad alta voce, traduzioni).</li>
-              <li>Simulazioni e casi di studio guidati.</li>
-            </ul>
-          </div>
+    <section id="esercizi">
+        <h2>3️⃣ Esercizi - Scegli l'Equazione Corretta</h2>
+
+        <div class="exercise">
+            <p><b>Problema 1:</b> In una classe ci sono 8 studenti in più delle studentesse. In totale sono 28. Quale equazione rappresenta il problema?</p>
+            <button onclick="verificaRisposta(this, true)">x + (x + 8) = 28</button>
+            <button onclick="verificaRisposta(this, false)">x - 8 = 28</button>
+            <button onclick="verificaRisposta(this, false)">2x = 28 + 8</button>
+            <p class="feedback"></p>
         </div>
-      </section>
 
-      <!-- RISCHI -->
-      <section id="rischi" class="section" aria-labelledby="h-rischi">
-        <span class="kicker">Sezione 2</span>
-        <h2 id="h-rischi">Rischi derivanti dall'utilizzo</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Criticità da considerare</h3>
-            <ul class="list">
-              <li><strong>Allucinazioni</strong> o risposte inaccurate: sempre verificare le fonti.</li>
-              <li><strong>Privacy e dati</strong>: protezione di informazioni personali degli studenti.</li>
-              <li><strong>Bias</strong> nei dataset: risultati distorti se i dati non sono rappresentativi.</li>
-              <li><strong>Dipendenza</strong> dagli strumenti: sviluppare pensiero critico e autonomia.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Buone pratiche</h3>
-            <ul class="list">
-              <li>Stabilire <em>policy</em> d’istituto e regole d’uso trasparenti.</li>
-              <li>Favorire la <strong>valutazione autentica</strong> e la tracciabilità dei processi.</li>
-              <li>Integrare l’AI come <strong>supporto</strong>, non sostituto dell’insegnante.</li>
-              <li>Formazione continua per docenti e studenti.</li>
-            </ul>
-          </div>
+        <div class="exercise">
+            <p><b>Problema 2:</b> Un libro e un quaderno costano insieme 15€. Il quaderno costa 3€ in meno del libro. Quale equazione usi?</p>
+            <button onclick="verificaRisposta(this, false)">x + 3 = 15</button>
+            <button onclick="verificaRisposta(this, true)">x + (x - 3) = 15</button>
+            <button onclick="verificaRisposta(this, false)">2x = 15 - 3</button>
+            <p class="feedback"></p>
         </div>
-      </section>
 
-      <!-- COSTI -->
-      <section id="costi" class="section" aria-labelledby="h-costi">
-        <span class="kicker">Sezione 3</span>
-        <h2 id="h-costi">Costi</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Voci di spesa</h3>
-            <ul class="list">
-              <li>Licenze software / piani educazione (gratuiti o a pagamento).</li>
-              <li>Infrastruttura: dispositivi, connettività, eventuale cloud.</li>
-              <li>Ore di <strong>formazione</strong> e supporto tecnico.</li>
-              <li>Aggiornamenti e sostenibilità nel tempo.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Strategie</h3>
-            <ul class="list">
-              <li>Partire con <strong>piloti</strong> a basso costo e misurare l’impatto.</li>
-              <li>Sfruttare <strong>open source</strong> e piani agevolati per scuole.</li>
-              <li>Condivisione di risorse tra istituti / reti di scuole.</li>
-              <li>Valutazioni <strong>costo-beneficio</strong> su casi d’uso specifici.</li>
-            </ul>
-          </div>
+        <div class="exercise">
+            <p><b>Problema 3:</b> Due fratelli hanno in totale 60€. Il maggiore ha il doppio dei soldi del minore. Quale equazione rappresenta il problema?</p>
+            <button onclick="verificaRisposta(this, false)">x + 2 = 60</button>
+            <button onclick="verificaRisposta(this, false)">x + x = 60</button>
+            <button onclick="verificaRisposta(this, true)">x + 2x = 60</button>
+            <p class="feedback"></p>
         </div>
-      </section>
+    </section>
 
-      <!-- PRIMARIA -->
-      <section id="primaria" class="section" aria-labelledby="h-primaria">
-        <span class="kicker">Sezione 4</span>
-        <h2 id="h-primaria">Applicazioni nella scuola primaria</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Attività suggerite</h3>
-            <ul class="list">
-              <li>Generazione di <strong>storie personalizzate</strong> per la lettura.</li>
-              <li>Quiz e giochi a difficoltà adattiva.</li>
-              <li>Supporti per <strong>DSA</strong>: semplificazione testi, mappe, audio.</li>
-              <li>Laboratori creativi (disegni, filastrocche, coding unplugged).</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Valutazione</h3>
-            <ul class="list">
-              <li>Rubriche con criteri osservabili e feedback formativo.</li>
-              <li>Portfolio digitale di evidenze (testi, immagini, audio).</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECONDARIA -->
-      <section id="secondaria" class="section" aria-labelledby="h-secondaria">
-        <span class="kicker">Sezione 5</span>
-        <h2 id="h-secondaria">Applicazioni nella scuola secondaria</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Esempi d’uso</h3>
-            <ul class="list">
-              <li>Generazione di <strong>mappe concettuali</strong> e piani di studio.</li>
-              <li>Analisi dati, simulazioni, laboratori virtuali.</li>
-              <li>Scrittura assistita e revisione con tracce motivate.</li>
-              <li>Traduzioni e confronto di fonti per <strong>CLIL</strong>.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Competenze trasversali</h3>
-            <ul class="list">
-              <li>Fact-checking, etica digitale, proprietà intellettuale.</li>
-              <li>Progettazione di prompt efficaci e documentazione del processo.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- MATEMATICA -->
-      <section id="matematica" class="section" aria-labelledby="h-matematica">
-        <span class="kicker">Sezione 6</span>
-        <h2 id="h-matematica">Applicazioni di Matematica</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Attività didattiche supportate dall'AI</h3>
-            <ul class="list">
-              <li>Generazione di esercizi a difficoltà progressiva e fogli di lavoro personalizzati.</li>
-              <li>Spiegazioni passo-passo e alternative per risolvere problemi matematici.</li>
-              <li>Creazione automatica di verifiche, con varianti e chiavi di correzione.</li>
-              <li>Visualizzazioni dinamiche: grafici interattivi, simulazioni e animazioni di concetti (es. limite, funzione, geometria).</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Strumenti e metodi</h3>
-            <ul class="list">
-              <li>Uso di CAS (Computer Algebra Systems) e modelli per il supporto al calcolo simbolico.</li>
-              <li>Applicazione di AI per analizzare gli errori ricorrenti degli studenti e suggerire interventi mirati.</li>
-              <li>Laboratori con prompt-guidati per far emergere strategie di risoluzione e metacognizione.</li>
-              <li>Integrazione con ambienti di coding per esplorare modelli matematici e simulazioni.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer aria-label="Informazioni">
-      <p>
-        © <span id="year"></span> AI & Didattica — Prototipo monofile. 
-        <span class="tag">HTML only</span>
-      </p>
-      <p style="margin-top:8px">
-        Suggerimento: inserisci questo file come <strong>index.html</strong> nella radice del tuo repository GitHub.
-      </p>
+    <footer>
+        © 2025 - Audio Guida Interattiva sulle Equazioni di Primo Grado
     </footer>
-  </div>
 
-  <script>
-    // Accessibilità: gestione focus per link di navigazione e stato corrente
-    const links = document.querySelectorAll('[data-link]');
-    const sections = [...document.querySelectorAll('main section')];
-    const setCurrent = (id) => {
-      links.forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + id ? 'true' : 'false'));
-    };
-    const onScroll = () => {
-      const y = window.scrollY + 100;
-      let current = sections[0].id;
-      sections.forEach(s => { if (s.offsetTop <= y) current = s.id; });
-      setCurrent(current);
-    };
-    window.addEventListener('scroll', onScroll, { passive:true });
-    onScroll();
+    <script>
+        // Sintesi vocale per spiegazioni
+        function riproduciAudio(tipo) {
+            const synth = window.speechSynthesis;
+            let testo = "";
 
-    // Scorrimento dolce
-    links.forEach(a => {
-      a.addEventListener('click', e => {
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if (el){
-          e.preventDefault();
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.pushState(null, '', '#' + id);
-          setCurrent(id);
+            if (tipo === "intro") {
+                testo = "Un'equazione di primo grado è un'uguaglianza che contiene un'incognita alla prima potenza. Ad esempio, due x più tre uguale sette.";
+            } else if (tipo === "proprieta") {
+                testo = "Per risolvere un'equazione di primo grado, possiamo applicare due proprietà. La proprietà additiva, che ci permette di sommare o sottrarre lo stesso numero a entrambi i membri, e la proprietà moltiplicativa, che consente di moltiplicare o dividere entrambi i membri per lo stesso numero, diverso da zero.";
+            }
+
+            const utterance = new SpeechSynthesisUtterance(testo);
+            utterance.lang = "it-IT";
+            utterance.rate = 1;
+            synth.speak(utterance);
         }
-      });
-    });
 
-    // Mobile menu toggle
-    const toggleBtn = document.getElementById('menuToggle');
-    const sidenav = document.getElementById('sidenav');
-    if (toggleBtn){
-      let open = true;
-      const apply = () => {
-        if (window.matchMedia('(max-width:980px)').matches){
-          sidenav.style.display = open ? 'block' : 'none';
-          toggleBtn.setAttribute('aria-expanded', String(open));
-        } else {
-          sidenav.style.display = 'block';
+        // Funzione per verificare le risposte
+        function verificaRisposta(button, corretta) {
+            const feedback = button.parentElement.querySelector(".feedback");
+            if (corretta) {
+                feedback.textContent = "✅ Corretto! Ottimo lavoro!";
+                feedback.style.color = "green";
+                riproduciFeedback("corretto");
+            } else {
+                feedback.textContent = "❌ Sbagliato! Riprova.";
+                feedback.style.color = "red";
+                riproduciFeedback("sbagliato");
+            }
         }
-      };
-      toggleBtn.addEventListener('click', () => { open = !open; apply(); });
-      window.addEventListener('resize', apply);
-      apply();
-    }
 
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Riduce animazioni se preferito
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll('*').forEach(el => el.style.animation = 'none');
-    }
-  </script>
+        // Feedback sonoro per la risposta
+        function riproduciFeedback(tipo) {
+            const synth = window.speechSynthesis;
+            let testo = tipo === "corretto" ? "Corretto! Complimenti!" : "Sbagliato. Riprova!";
+            const utterance = new SpeechSynthesisUtterance(testo);
+            utterance.lang = "it-IT";
+            utterance.rate = 1;
+            synth.speak(utterance);
+        }
+    </script>
 </body>
 </html>
